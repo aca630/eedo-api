@@ -1,0 +1,77 @@
+<?php
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+
+//Admin
+use App\Http\Controllers\Api\Admin\AdminController;
+use App\Http\Controllers\Api\Admin\Areas\AreasController;
+use App\Http\Controllers\Api\Admin\Cash_Tickets\Cash_TicketsController;
+use App\Http\Controllers\Api\Admin\Collectors\CollectorController;
+use App\Http\Controllers\Api\Admin\Occupants\OccupantsController;
+use App\Http\Controllers\Api\Admin\Reports\ReportsController;
+use App\Http\Controllers\Api\Admin\Sections\SectionController;
+use App\Http\Controllers\Api\Settings\CurrentDateCheckerController;
+
+
+/*
+|--------------------------------------------------------------------------
+| API Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register API routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| is assigned the "api" middleware group. Enjoy building your API!
+|
+*/
+
+
+
+
+
+//Admin Routes
+Route::controller(AdminController::class)->group(function () {
+    Route::post('admin/login', 'login');
+    Route::post('admin/register', 'register');
+});
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::resource('admin/area', AreasController::class);
+});
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::resource('admin/section', SectionController::class);
+});
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::resource('admin/collector', CollectorController::class);
+});
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::resource('admin/collector', CollectorController::class);
+});
+
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::resource('admin/occupant', OccupantsController::class);
+});
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::resource('admin/cash_ticket', Cash_TicketsController::class);
+});
+
+
+
+Route::middleware('auth:sanctum')->controller(ReportsController::class)->group(function () {
+    Route::get('admin/GetAreaAndSection', 'GetAreaAndSection');
+});
+
+
+//END ADMIN ROUTES
+
+
+
+//Settings Route
+Route::controller(CurrentDateCheckerController::class)->group(function () {
+    Route::get('settings/GetCurrentDate', 'GetCurrentDate');
+});
