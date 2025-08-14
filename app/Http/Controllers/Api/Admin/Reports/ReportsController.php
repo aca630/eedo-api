@@ -1,0 +1,43 @@
+<?php
+
+namespace App\Http\Controllers\Api\Admin\Reports;
+
+use App\Http\Controllers\Api\Helpers\BaseController;
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
+class ReportsController extends BaseController
+{
+    //
+    public function GetAreaAndSection(Request $request)
+    {
+
+
+        $filter = $request->all();
+
+        $rawQuery = DB::table('areas')
+            ->selectRaw('areas.id as area_id')
+            ->selectRaw('areas.name as area_name')
+            ->selectRaw('sections.id as section_id')
+            ->selectRaw('sections.name as section_name')
+            ->selectRaw('sections.rent_per_month')
+            ->join('sections', 'sections.area_id', '=', 'areas.id')
+            // ->selectRaw('COUNT(DISTINCT bets.transactionId) as TotalVoidCount')
+            // ->selectRaw('SUM(bets.betAmount) As totalVoid')
+            // ->leftJoin('draws', 'draws.id', '=', 'bets.drawId')
+            // ->leftJoin('tellers', 'tellers.id', '=', 'bets.tellerId')
+            // // ->where('draws.created_at', '>=', $from)
+            // // ->where('draws.created_at', '<', $to)
+            // ->where('bets.isVoid', '=', 1)
+            // ->groupBy('tellers.id', 'draws.id')
+            // ->groupBy('tellers.id')
+            ->orderBy('areas.name', 'ASC')
+            ->get();
+        $Querydata = json_decode($rawQuery, true);
+
+        return $this->sendResponse($Querydata, 'Reports retrieved successfully.');
+
+
+    }
+}
