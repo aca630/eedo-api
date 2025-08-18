@@ -11,6 +11,9 @@ use App\Http\Controllers\Api\Admin\Collectors\CollectorController;
 use App\Http\Controllers\Api\Admin\Occupants\OccupantsController;
 use App\Http\Controllers\Api\Admin\Reports\ReportsController;
 use App\Http\Controllers\Api\Admin\Sections\SectionController;
+use App\Http\Controllers\Api\Collector\CollectorLoginController;
+use App\Http\Controllers\Api\Collector\Dispense_Cash_Tickets_Controller;
+use App\Http\Controllers\Api\Collector\Get_Cash_Tickets_Controller;
 use App\Http\Controllers\Api\Settings\CurrentDateCheckerController;
 
 
@@ -64,10 +67,30 @@ Route::middleware('auth:sanctum')->group(function () {
 
 Route::middleware('auth:sanctum')->controller(ReportsController::class)->group(function () {
     Route::get('admin/GetAreaAndSection', 'GetAreaAndSection');
+    Route::get('admin/OverAllDispenseCashTickets', 'OverAllDispenseCashTickets');
+    Route::get('admin/OverAllDispenseCashTicketsPerName', 'OverAllDispenseCashTicketsPerName');
+    Route::get('admin/OverAllDispenseCashTicketsPerCollector', 'OverAllDispenseCashTicketsPerCollector');
+
 });
 
 
 //END ADMIN ROUTES
+
+
+//Collector Routes
+Route::controller(CollectorLoginController::class)->group(function () {
+    Route::post('collector/login', 'login');
+});
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::resource('collector/cash_ticket', Get_Cash_Tickets_Controller::class);
+});
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::resource('collector/dispense_cash_ticket', Dispense_Cash_Tickets_Controller::class);
+});
+
+//END COLLECTOR ROUTES
 
 
 
