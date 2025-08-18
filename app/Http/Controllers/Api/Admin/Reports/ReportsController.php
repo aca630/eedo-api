@@ -40,4 +40,62 @@ class ReportsController extends BaseController
 
 
     }
+
+
+    public function OverAllDispenseCashTickets(Request $request)
+    {
+
+
+        $filter = $request->all();
+
+        $rawQuery = DB::table('cash_tickets')
+            ->selectRaw('SUM(cash_tickets.price) as total_dispensed')
+            ->join('dispense_tickets', 'dispense_tickets.cash_ticket_id', '=', 'cash_tickets.id')
+            ->get();
+        $Querydata = json_decode($rawQuery, true);
+
+        return $this->sendResponse($Querydata, 'Reports retrieved successfully.');
+
+
+    }
+
+    public function OverAllDispenseCashTicketsPerName(Request $request)
+    {
+
+
+        $filter = $request->all();
+
+        $rawQuery = DB::table('cash_tickets')
+            ->selectRaw('SUM(cash_tickets.price) as total_dispensed')
+            ->selectRaw('cash_tickets.name')
+            ->join('dispense_tickets', 'dispense_tickets.cash_ticket_id', '=', 'cash_tickets.id')
+            ->groupBy('cash_tickets.id')
+            ->get();
+        $Querydata = json_decode($rawQuery, true);
+
+        return $this->sendResponse($Querydata, 'Reports retrieved successfully.');
+
+
+    }
+
+    public function OverAllDispenseCashTicketsPerCollector(Request $request)
+    {
+
+
+        $filter = $request->all();
+
+        $rawQuery = DB::table('cash_tickets')
+            ->selectRaw('SUM(cash_tickets.price) as total_dispensed')
+            ->selectRaw('cash_tickets.name')
+            ->selectRaw('collectors.full_name')
+            ->join('dispense_tickets', 'dispense_tickets.cash_ticket_id', '=', 'cash_tickets.id')
+            ->join('collectors', 'collectors.id', '=', 'dispense_tickets.collector_id')
+            ->groupBy('collectors.id')
+            ->get();
+        $Querydata = json_decode($rawQuery, true);
+
+        return $this->sendResponse($Querydata, 'Reports retrieved successfully.');
+
+
+    }
 }
