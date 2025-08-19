@@ -29,7 +29,6 @@ class ReportsController extends BaseController
             // ->leftJoin('tellers', 'tellers.id', '=', 'bets.tellerId')
             // // ->where('draws.created_at', '>=', $from)
             // // ->where('draws.created_at', '<', $to)
-            // ->where('bets.isVoid', '=', 1)
             // ->groupBy('tellers.id', 'draws.id')
             // ->groupBy('tellers.id')
             ->orderBy('areas.name', 'ASC')
@@ -37,8 +36,6 @@ class ReportsController extends BaseController
         $Querydata = json_decode($rawQuery, true);
 
         return $this->sendResponse($Querydata, 'Reports retrieved successfully.');
-
-
     }
 
 
@@ -47,16 +44,17 @@ class ReportsController extends BaseController
 
 
         $filter = $request->all();
+        $from = $filter['from'];
+        $to = $filter['to'];
 
         $rawQuery = DB::table('cash_tickets')
             ->selectRaw('SUM(cash_tickets.price) as total_dispensed')
             ->join('dispense_tickets', 'dispense_tickets.cash_ticket_id', '=', 'cash_tickets.id')
+            ->whereRaw("dispense_tickets.is_void = 0 AND  dispense_tickets.created_at >= '" . $from . "' AND dispense_tickets.created_at < '" . $to . "'")
             ->get();
         $Querydata = json_decode($rawQuery, true);
 
         return $this->sendResponse($Querydata, 'Reports retrieved successfully.');
-
-
     }
 
     public function OverAllDispenseCashTicketsPerName(Request $request)
@@ -64,18 +62,19 @@ class ReportsController extends BaseController
 
 
         $filter = $request->all();
+        $from = $filter['from'];
+        $to = $filter['to'];
 
         $rawQuery = DB::table('cash_tickets')
             ->selectRaw('SUM(cash_tickets.price) as total_dispensed')
             ->selectRaw('cash_tickets.name')
             ->join('dispense_tickets', 'dispense_tickets.cash_ticket_id', '=', 'cash_tickets.id')
+            ->whereRaw("dispense_tickets.is_void = 0 AND  dispense_tickets.created_at >= '" . $from . "' AND dispense_tickets.created_at < '" . $to . "'")
             ->groupBy('cash_tickets.id')
             ->get();
         $Querydata = json_decode($rawQuery, true);
 
         return $this->sendResponse($Querydata, 'Reports retrieved successfully.');
-
-
     }
 
     public function OverAllDispenseCashTicketsPerCollector(Request $request)
@@ -83,6 +82,8 @@ class ReportsController extends BaseController
 
 
         $filter = $request->all();
+        $from = $filter['from'];
+        $to = $filter['to'];
 
         $rawQuery = DB::table('cash_tickets')
             ->selectRaw('SUM(cash_tickets.price) as total_dispensed')
@@ -90,12 +91,11 @@ class ReportsController extends BaseController
             ->selectRaw('collectors.full_name')
             ->join('dispense_tickets', 'dispense_tickets.cash_ticket_id', '=', 'cash_tickets.id')
             ->join('collectors', 'collectors.id', '=', 'dispense_tickets.collector_id')
+            ->whereRaw("dispense_tickets.is_void = 0 AND  dispense_tickets.created_at >= '" . $from . "' AND dispense_tickets.created_at < '" . $to . "'")
             ->groupBy('collectors.id')
             ->get();
         $Querydata = json_decode($rawQuery, true);
 
         return $this->sendResponse($Querydata, 'Reports retrieved successfully.');
-
-
     }
 }
