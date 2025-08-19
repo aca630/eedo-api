@@ -71,6 +71,10 @@ Route::middleware('auth:sanctum')->controller(ReportsController::class)->group(f
     Route::get('admin/OverAllDispenseCashTickets', 'OverAllDispenseCashTickets');
     Route::get('admin/OverAllDispenseCashTicketsPerName', 'OverAllDispenseCashTicketsPerName');
     Route::get('admin/OverAllDispenseCashTicketsPerCollector', 'OverAllDispenseCashTicketsPerCollector');
+    Route::get('admin/OverAllMonthlyPayment', 'OverAllMonthlyPayment');
+    Route::get('admin/OverAllMonthlyPaymentPerArea', 'OverAllMonthlyPaymentPerArea');
+    Route::get('admin/OverAllMonthlyPaymentPerCollector', 'OverAllMonthlyPaymentPerCollector');
+
 
 });
 
