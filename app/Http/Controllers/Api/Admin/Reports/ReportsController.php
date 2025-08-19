@@ -98,4 +98,70 @@ class ReportsController extends BaseController
 
         return $this->sendResponse($Querydata, 'Reports retrieved successfully.');
     }
+
+
+    public function OverAllMonthlyPayment(Request $request)
+    {
+
+
+        $filter = $request->all();
+        $from = $filter['from'];
+        $to = $filter['to'];
+
+        $rawQuery = DB::table('occupant_monthly_payments')
+            ->selectRaw('SUM(sections.rent_per_month) as total_monthly_payment')
+            ->join('occupants', 'occupants.stall_no', '=', 'occupant_monthly_payments.stall_no')
+            ->join('sections', 'sections.id', '=', 'occupants.section_id')
+            ->whereRaw("occupant_monthly_payments.is_void = 0 AND  occupant_monthly_payments.created_at >= '" . $from . "' AND occupant_monthly_payments.created_at < '" . $to . "'")
+            ->get();
+        $Querydata = json_decode($rawQuery, true);
+
+        return $this->sendResponse($Querydata, 'Reports retrieved successfully.');
+    }
+
+    public function OverAllMonthlyPaymentPerArea(Request $request)
+    {
+
+
+        $filter = $request->all();
+        $from = $filter['from'];
+        $to = $filter['to'];
+
+        $rawQuery = DB::table('occupant_monthly_payments')
+            ->selectRaw('SUM(sections.rent_per_month) as total_monthly_payment')
+            ->selectRaw('areas as area_name')
+            ->join('occupants', 'occupants.stall_no', '=', 'occupant_monthly_payments.stall_no')
+            ->join('sections', 'sections.id', '=', 'occupants.section_id')
+            ->join('areas', 'areas.id', '=', 'sections.area_id')
+            ->whereRaw("occupant_monthly_payments.is_void = 0 AND  occupant_monthly_payments.created_at >= '" . $from . "' AND occupant_monthly_payments.created_at < '" . $to . "'")
+            ->groupBy('areas.id')
+            ->get();
+        $Querydata = json_decode($rawQuery, true);
+
+        return $this->sendResponse($Querydata, 'Reports retrieved successfully.');
+    }
+
+
+    public function OverAllMonthlyPaymentPerCollector(Request $request)
+    {
+
+
+        $filter = $request->all();
+        $from = $filter['from'];
+        $to = $filter['to'];
+
+        $rawQuery = DB::table('occupant_monthly_payments')
+            ->selectRaw('SUM(sections.rent_per_month) as total_monthly_payment')
+            ->selectRaw('collectors.full_name')
+            ->join('occupants', 'occupants.stall_no', '=', 'occupant_monthly_payments.stall_no')
+            ->join('sections', 'sections.id', '=', 'occupants.section_id')
+            ->join('areas', 'areas.id', '=', 'sections.area_id')
+            ->join('collectors', 'collectors.id', '=', 'occupants.collector_id')
+            ->whereRaw("occupant_monthly_payments.is_void = 0 AND  occupant_monthly_payments.created_at >= '" . $from . "' AND occupant_monthly_payments.created_at < '" . $to . "'")
+            ->groupBy('collectors.id')
+            ->get();
+        $Querydata = json_decode($rawQuery, true);
+
+        return $this->sendResponse($Querydata, 'Reports retrieved successfully.');
+    }
 }
