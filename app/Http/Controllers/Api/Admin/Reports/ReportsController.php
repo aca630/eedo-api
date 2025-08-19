@@ -129,7 +129,7 @@ class ReportsController extends BaseController
 
         $rawQuery = DB::table('occupant_monthly_payments')
             ->selectRaw('SUM(sections.rent_per_month) as total_monthly_payment')
-            ->selectRaw('areas as area_name')
+            ->selectRaw('areas.name as area_name')
             ->join('occupants', 'occupants.stall_no', '=', 'occupant_monthly_payments.stall_no')
             ->join('sections', 'sections.id', '=', 'occupants.section_id')
             ->join('areas', 'areas.id', '=', 'sections.area_id')
