@@ -33,7 +33,7 @@ class OccupantsController extends BaseController
             ->selectRaw('collectors.full_name as collector_name')
             ->join('collectors', 'collectors.id', '=', 'occupants.collector_id')
             ->join('sections', 'sections.id', '=', 'occupants.section_id')
-            ->join('areas', 'areas.id', '=', 'sections.id')
+            ->join('areas', 'areas.id', '=', 'sections.area_id')
             ->orderBy('occupants.stall_no', 'ASC')
             // ->selectRaw('sections.id as section_id')
             // ->selectRaw('sections.name as section_name')
