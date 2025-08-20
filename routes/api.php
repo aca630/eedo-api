@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\Admin\AdminController;
 use App\Http\Controllers\Api\Admin\Areas\AreasController;
 use App\Http\Controllers\Api\Admin\Cash_Tickets\Cash_TicketsController;
 use App\Http\Controllers\Api\Admin\Collectors\CollectorController;
+use App\Http\Controllers\Api\Admin\Monthly_Rental\MonthlyRentalController;
 use App\Http\Controllers\Api\Admin\Occupants\OccupantsController;
 use App\Http\Controllers\Api\Admin\Reports\ReportsController;
 use App\Http\Controllers\Api\Admin\Sections\SectionController;
@@ -62,6 +63,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::resource('admin/cash_ticket', Cash_TicketsController::class);
+});
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::resource('admin/void_monthly_rental', MonthlyRentalController::class);
 });
 
 
