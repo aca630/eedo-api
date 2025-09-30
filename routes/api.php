@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Route;
 //Admin
 use App\Http\Controllers\Api\Admin\AdminController;
 use App\Http\Controllers\Api\Admin\Areas\AreasController;
+use App\Http\Controllers\Api\Admin\Livestocks\LivestocksController;
+use App\Http\Controllers\Api\Admin\SlaughterPrivate\SLPrivate;
 use App\Http\Controllers\Api\Admin\Cash_Tickets\Cash_TicketsController;
 use App\Http\Controllers\Api\Admin\Collectors\CollectorController;
 use App\Http\Controllers\Api\Admin\Monthly_Rental\MonthlyRentalController;
@@ -45,7 +47,15 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 Route::middleware('auth:sanctum')->group(function () {
+    Route::resource('admin/livestock', LivestocksController::class);
+});
+
+Route::middleware('auth:sanctum')->group(function () {
     Route::resource('admin/section', SectionController::class);
+});
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::resource('admin/slprivate', SLPrivate::class);
 });
 
 Route::middleware('auth:sanctum')->group(function () {
