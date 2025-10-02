@@ -25,7 +25,7 @@ class Reports extends BaseController
             ->selectRaw('SUM(cash_tickets.price) as total')
             ->join('dispense_tickets', 'dispense_tickets.cash_ticket_id', '=', 'cash_tickets.id')
             ->whereRaw("dispense_tickets.is_void = 0 AND dispense_tickets.collector_id ='" . $id . "' AND  dispense_tickets.created_at >= '" . $from . "' AND dispense_tickets.created_at < '" . $to . "'")
-            ->groupBy('cash_tickets.id')
+            // ->groupBy('cash_tickets.id')
             ->get();
         $Querydata = json_decode($rawQuery, true);
 
