@@ -35,4 +35,11 @@ class Dispense_Cash_Tickets_Controller extends BaseController
 
         return $this->sendResponse($success, 'Area created successfully.');
     }
+
+    public function update(Request $request, $id)
+    {
+        $data = dispense_tickets::find($id);
+        $data->update($request->all());
+        return $this->sendResponse($data, 'Data updated successfully.');
+    }
 }
