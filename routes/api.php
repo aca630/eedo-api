@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Route;
 //Admin
 use App\Http\Controllers\Api\Admin\AdminController;
 use App\Http\Controllers\Api\Admin\Areas\AreasController;
-use App\Http\Controllers\Api\Admin\Livestocks\LivestocksController;
 use App\Http\Controllers\Api\Admin\LivestockCharges\LivestockChargesController;
 use App\Http\Controllers\Api\Admin\SlaughterPrivate\SLPrivate;
 use App\Http\Controllers\Api\Admin\Cash_Tickets\Cash_TicketsController;
@@ -46,10 +45,6 @@ Route::controller(AdminController::class)->group(function () {
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::resource('admin/area', AreasController::class);
-});
-
-Route::middleware('auth:sanctum')->group(function () {
-    Route::resource('admin/livestock', LivestocksController::class);
 });
 
 Route::middleware('auth:sanctum')->group(function () {
