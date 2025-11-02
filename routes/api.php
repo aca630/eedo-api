@@ -14,13 +14,18 @@ use App\Http\Controllers\Api\Admin\Monthly_Rental\MonthlyRentalController;
 use App\Http\Controllers\Api\Admin\Occupants\OccupantsController;
 use App\Http\Controllers\Api\Admin\Reports\ReportsController;
 use App\Http\Controllers\Api\Admin\Sections\SectionController;
+use App\Http\Controllers\Api\Admin\Terminal\Cooperatives;
+use App\Http\Controllers\Api\Admin\Terminal\DispenseTicket;
+use App\Http\Controllers\Api\Admin\Terminal\Puv;
+use App\Http\Controllers\Api\Admin\Terminal\PuvTypes;
+use App\Http\Controllers\Api\Admin\Terminal\TerminalRoutes;
 use App\Http\Controllers\Api\Collector\CollectorLoginController;
 use App\Http\Controllers\Api\Collector\Dispense_Cash_Tickets_Controller;
 use App\Http\Controllers\Api\Collector\Get_Cash_Tickets_Controller;
 use App\Http\Controllers\Api\Collector\Occupant_Monthly_Payment_Controller;
 use App\Http\Controllers\Api\Collector\Reports;
 use App\Http\Controllers\Api\Settings\CurrentDateCheckerController;
-
+use App\Http\Controllers\Api\Terminal\TerminalReports;
 
 /*
 |--------------------------------------------------------------------------
@@ -89,6 +94,39 @@ Route::middleware('auth:sanctum')->controller(ReportsController::class)->group(f
 
 
 });
+
+//TERMINAL ROUTES START
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::resource('admin/puv_type', PuvTypes::class);
+});
+Route::middleware('auth:sanctum')->group(function () {
+    Route::resource('admin/cooperative', Cooperatives::class);
+});
+Route::middleware('auth:sanctum')->group(function () {
+    Route::resource('admin/puv', Puv::class);
+});
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::resource('admin/terminal_route', TerminalRoutes::class);
+});
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::resource('admin/despense_ticket', DispenseTicket::class);
+});
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::resource('terminal/despense_ticket', DispenseTicket::class);
+});
+
+
+Route::middleware('auth:sanctum')->controller(TerminalReports::class)->group(function () {
+    Route::get('terminal/TerminalTotalTicketsPerDay', 'TerminalTotalTicketsPerDay');
+    Route::get('terminal/OverAllDispenseTerminalTickets', 'OverAllDispenseTerminalTickets');
+
+});
+
+//TERMINAL ROUTES END
 
 
 //END ADMIN ROUTES
