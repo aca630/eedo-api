@@ -69,7 +69,7 @@ public function computeLatest()
     }
 
     // 🔹 2. Get livestock charges
-    $charges = \DB::table('livestock_charges')->get();
+    $charges = DB::table('livestock_charges')->get();
 
     $small = $charges->where('livestock_id', 1)->first();
     $large = $charges->where('livestock_id', 2)->first();
