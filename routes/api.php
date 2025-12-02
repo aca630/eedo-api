@@ -26,6 +26,7 @@ use App\Http\Controllers\Api\Collector\Occupant_Monthly_Payment_Controller;
 use App\Http\Controllers\Api\Collector\Reports;
 use App\Http\Controllers\Api\Settings\CurrentDateCheckerController;
 use App\Http\Controllers\Api\Terminal\TerminalReports;
+use App\Http\Controllers\PrivateTransactionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -130,6 +131,13 @@ Route::middleware('auth:sanctum')->controller(TerminalReports::class)->group(fun
 
 
 //END ADMIN ROUTES
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('private_transaction/private_ls', [PrivateTransactionController::class, 'store']);
+});
+
+Route::get('private_transaction/latest', [PrivateTransactionController::class, 'latest']);
+
+Route::get('private_transaction/compute_latest', [PrivateTransactionController::class, 'computeLatest']);
 
 
 //Collector Routes
