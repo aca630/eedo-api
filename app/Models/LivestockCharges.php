@@ -10,8 +10,8 @@ class LivestockCharges extends Model
     use HasFactory;
     protected $fillable = ['livestock_id', 'cf', 'sf', 'spf', 'pmf'];
 
-    public function livestock()
-    {
-        return $this->belongsTo(Livestock::class);
-    }
+    // public function livestock()
+    // {
+    //     return $this->belongsTo(Livestock::class);
+    // }
 }
