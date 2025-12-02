@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\SlaughterPrivate; // ✅ use your existing model
+use Illuminate\Support\Facades\DB;
 
 class PrivateTransactionController extends Controller
 {
