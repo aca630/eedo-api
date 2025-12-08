@@ -10,29 +10,30 @@ class PrivateTransactionController extends Controller
 {
     public function store(Request $request)
     {
-        // ✅ Validate fields from your mobile payload
+        // ✅ Validate payload including PMF
         $validated = $request->validate([
-            'date' => 'required|date',
-            'or_no' => 'required|string|max:255',
-            'agency' => 'required|string|max:255',
-            'owner' => 'required|string|max:255',
+            'date'        => 'required|date',
+            'or_no'       => 'required|string|max:255',
+            'agency'      => 'required|string|max:255',
+            'owner'       => 'required|string|max:255',
             'small_heads' => 'nullable|integer|min:0',
             'large_heads' => 'nullable|integer|min:0',
+            'pmf'         => 'nullable|integer|min:0', // 👈 NEW
         ]);
 
-        // ✅ Save to slaughter_privates table
+        // ✅ Save to slaughter_privates (pmf included)
         $record = SlaughterPrivate::create($validated);
 
-        // ✅ Return JSON response
         return response()->json([
             'message' => 'Private transaction saved successfully!',
-            'data' => $record
+            'data'    => $record,
         ], 201);
     }
 
-    public function latest()
+
+public function latest()
 {
-    $record = \App\Models\SlaughterPrivate::orderByDesc('id')->first();
+    $record = SlaughterPrivate::orderByDesc('id')->first();
 
     if (!$record) {
         return response()->json([
@@ -44,23 +45,26 @@ class PrivateTransactionController extends Controller
     return response()->json([
         'success' => true,
         'data' => [
-            'id' => $record->id,
-            'date' => $record->date,
-            'or_no' => $record->or_no,
-            'agency' => $record->agency,
-            'owner' => $record->owner,
-            'small_heads' => (int)$record->small_heads,
-            'large_heads' => (int)$record->large_heads,
-            'created_at' => $record->created_at,
-            'updated_at' => $record->updated_at,
+            'id'          => $record->id,
+            'date'        => $record->date,
+            'or_no'       => $record->or_no,
+            'agency'      => $record->agency,
+            'owner'       => $record->owner,
+            'small_heads' => (int) $record->small_heads,
+            'large_heads' => (int) $record->large_heads,
+            'pmf'         => (int) ($record->pmf ?? 0), // 👈 ADD
+            'created_at'  => $record->created_at,
+            'updated_at'  => $record->updated_at,
         ]
     ], 200);
 }
 
+
+
 public function computeLatest()
 {
-    // 🔹 1. Get latest record from slaughter_privates
-    $record = \App\Models\SlaughterPrivate::orderByDesc('id')->first();
+    // 🔹 1. Get latest record
+    $record = SlaughterPrivate::orderByDesc('id')->first();
 
     if (!$record) {
         return response()->json([
@@ -72,8 +76,8 @@ public function computeLatest()
     // 🔹 2. Get livestock charges
     $charges = DB::table('livestock_charges')->get();
 
-    $small = $charges->where('livestock_id', 1)->first();
-    $large = $charges->where('livestock_id', 2)->first();
+    $small = $charges->where('livestock_id', 1)->first(); // small heads
+    $large = $charges->where('livestock_id', 2)->first(); // large heads
 
     if (!$small || !$large) {
         return response()->json([
@@ -82,27 +86,40 @@ public function computeLatest()
         ], 404);
     }
 
-    // 🔹 3. Compute totals
-    $cf_total  = ($record->small_heads * $small->cf)  + ($record->large_heads * $large->cf);
-    $sf_total  = ($record->small_heads * $small->sf)  + ($record->large_heads * $large->sf);
-    $spf_total = ($record->small_heads * $small->spf) + ($record->large_heads * $large->spf);
-    $pmf_total = ($record->small_heads * $small->pmf) + ($record->large_heads * $large->pmf);
-    $total     = $cf_total + $sf_total + $spf_total + $pmf_total;
+    $small_heads = (int) ($record->small_heads ?? 0);
+    $large_heads = (int) ($record->large_heads ?? 0);
 
-    // 🔹 4. Return print-ready JSON
+    // 🔹 3. Compute CF, SF, SPF (per head)
+    $cf_total  = ($small_heads * $small->cf)  + ($large_heads * $large->cf);
+    $sf_total  = ($small_heads * $small->sf)  + ($large_heads * $large->sf);
+    $spf_total = ($small_heads * $small->spf) + ($large_heads * $large->spf);
+
+    // 🔹 4. PMF is FLAT per transaction, not per head
+    $pmf_total = (int) ($record->pmf ?? 0);
+
+    // 🔹 5. Grand total
+    $total = $cf_total + $sf_total + $spf_total + $pmf_total;
+
+    // 🔹 6. Return print-ready JSON
     return response()->json([
-        'or_no'  => $record->or_no,
-        'agency' => $record->agency,
-        'owner'  => $record->owner,
+        'success' => true,
+        'or_no'   => $record->or_no,
+        'agency'  => $record->agency,
+        'owner'   => $record->owner,
+        'heads'   => [
+            'small' => $small_heads,
+            'large' => $large_heads,
+        ],
         'charges' => [
-            'cf'    => round($cf_total, 2),
-            'sf'    => round($sf_total, 2),
-            'spf'   => round($spf_total, 2),
-            'pmf'   => round($pmf_total, 2),
-            'total' => round($total, 2),
-        ]
+            'cf'    => $cf_total,
+            'sf'    => $sf_total,
+            'spf'   => $spf_total,
+            'pmf'   => $pmf_total,
+            'total' => $total,
+        ],
     ], 200);
 }
+
 
 
 }

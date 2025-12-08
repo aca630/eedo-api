@@ -16,5 +16,6 @@ class SlaughterPrivate extends Model
         'owner',
         'small_heads',
         'large_heads',
+        'pmf',
     ];
 }
