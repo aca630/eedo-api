@@ -190,12 +190,14 @@ class ReportsController extends BaseController
             ->selectRaw('sections.rent_per_month')
             ->selectRaw('collectors.full_name as collector_name')
             ->selectRaw('CASE WHEN occupant_monthly_payments.stall_no  IS NULL THEN "Unpaid" ELSE "Paid" END as payment_status')
+            ->selectRaw('CASE WHEN occupant_monthly_payments.or_number  IS NULL THEN "N/A" ELSE occupant_monthly_payments.or_number END as or_number')
+            ->selectRaw('CASE WHEN occupant_monthly_payments.paid_date  IS NULL THEN "N/A" ELSE occupant_monthly_payments.paid_date END as paid_date')
             ->join('collectors', 'collectors.id', '=', 'occupants.collector_id')
             ->join('sections', 'sections.id', '=', 'occupants.section_id')
             ->join('areas', 'areas.id', '=', 'sections.area_id')
             ->leftJoin('occupant_monthly_payments', function ($join) use ($from, $to) {
                 $join->on('occupant_monthly_payments.stall_no', '=', 'occupants.stall_no')
-                     ->whereRaw("occupant_monthly_payments.created_at >= '" . $from . "' AND occupant_monthly_payments.created_at < '" . $to . "'");
+                     ->whereRaw("occupant_monthly_payments.paid_date >= '" . $from . "' AND occupant_monthly_payments.paid_date < '" . $to . "'");
             })
             ->orderBy('occupants.stall_no', 'ASC')
             // ->selectRaw('sections.id as section_id')
