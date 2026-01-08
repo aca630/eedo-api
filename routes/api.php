@@ -93,6 +93,7 @@ Route::middleware('auth:sanctum')->controller(ReportsController::class)->group(f
     Route::get('admin/OverAllMonthlyPaymentPerArea', 'OverAllMonthlyPaymentPerArea');
     Route::get('admin/OverAllMonthlyPaymentPerCollector', 'OverAllMonthlyPaymentPerCollector');
     Route::get('admin/MontlyRentalReports', 'MontlyRentalReports');
+    Route::get('admin/MontlyRentalReportsChecker', 'MontlyRentalReportsChecker');
 
 });
 
