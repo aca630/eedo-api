@@ -142,6 +142,23 @@ Route::get('private_transaction/latest', [PrivateTransactionController::class, '
 
 Route::get('private_transaction/compute_latest', [PrivateTransactionController::class, 'computeLatest']);
 
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('private_transaction/daily_total', [PrivateTransactionController::class, 'dailyTotal']);
+});
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get(
+        'private_transaction/history',
+        [PrivateTransactionController::class, 'history']
+    );
+});
+
+Route::middleware('auth:sanctum')->get(
+    'private_transaction/compute-by-id/{id}',
+    [PrivateTransactionController::class, 'computeById']
+)->whereNumber('id');
+
+
 
 //Collector Routes
 Route::controller(CollectorLoginController::class)->group(function () {
