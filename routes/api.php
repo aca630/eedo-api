@@ -24,9 +24,13 @@ use App\Http\Controllers\Api\Collector\Dispense_Cash_Tickets_Controller;
 use App\Http\Controllers\Api\Collector\Get_Cash_Tickets_Controller;
 use App\Http\Controllers\Api\Collector\Occupant_Monthly_Payment_Controller;
 use App\Http\Controllers\Api\Collector\Reports;
+use App\Http\Controllers\Api\POS\ProductController;
+use App\Http\Controllers\Api\POS\PurchaseOrderController;
+use App\Http\Controllers\Api\POS\PurchaseOrderReportController;
 use App\Http\Controllers\Api\Settings\CurrentDateCheckerController;
 use App\Http\Controllers\Api\Terminal\TerminalReports;
 use App\Http\Controllers\PrivateTransactionController;
+use App\Models\Purchase_Orders;
 
 /*
 |--------------------------------------------------------------------------
@@ -192,3 +196,16 @@ Route::middleware('auth:sanctum')->controller(Reports::class)->group(function ()
 Route::controller(CurrentDateCheckerController::class)->group(function () {
     Route::get('settings/GetCurrentDate', 'GetCurrentDate');
 });
+
+//POS Routes
+Route::middleware('auth:sanctum')->group(function () {
+    Route::resource('admin/product', ProductController::class);
+});
+Route::middleware('auth:sanctum')->group(function () {
+    Route::resource('admin/purchase_order', PurchaseOrderController::class);
+});
+Route::middleware('auth:sanctum')->group(function () {
+    Route::resource('admin/purchase_order_report', PurchaseOrderReportController::class);
+});
+
+
