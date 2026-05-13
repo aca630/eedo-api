@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\POS;
 use App\Http\Controllers\Api\Helpers\BaseController;
 use App\Http\Controllers\Controller;
 use App\Models\Products;
-use App\Models\Purchase_Orders;
+use App\Models\purchase_orders;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -57,7 +57,7 @@ class PurchaseOrderController extends BaseController
                 if ($qty <= 0) {
                     throw new Exception('Invalid quantity');
                 }
-           
+
                 $product->stock -= $qty;
 
                 $insertRows[] = [
@@ -74,7 +74,7 @@ class PurchaseOrderController extends BaseController
                 $responseItems[] = [
                     'purchase_order_id' => $purchase_order_id,
                     'quantity_purchase' => $qty,
-                
+
                     'product' => [
                         'id'            => $product->id,
                         'product_code'  => $product->product_code,
@@ -91,7 +91,7 @@ class PurchaseOrderController extends BaseController
                 ];
             }
 
-            Purchase_Orders::insert($insertRows);
+            purchase_orders::insert($insertRows);
 
             foreach ($products as $product) {
                 Products::where('id', $product->id)
