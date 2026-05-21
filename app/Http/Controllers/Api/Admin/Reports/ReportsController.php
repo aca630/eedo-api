@@ -273,4 +273,33 @@ class ReportsController extends BaseController
 
         return $this->sendResponse($Querydata, 'Reports retrieved successfully.');
     }
+
+    public function TerminalTicketPerPlate(Request $request)
+{
+    $filter = $request->all();
+
+    $from   = $filter['from'];
+    $to     = $filter['to'];
+    $puv_id = $filter['puv_id'];
+
+    $rawQuery = DB::table('terminal_dispense_tickets')
+        ->selectRaw('terminal_routes.terminal')
+        ->selectRaw('terminal_routes.route')
+        ->selectRaw('terminal_dispense_tickets.amount')
+        ->selectRaw('terminal_dispense_tickets.is_first_trip')
+        ->selectRaw('terminal_dispense_tickets.is_void')
+        ->join('terminal_routes', 'terminal_routes.id', '=', 'terminal_dispense_tickets.terminal_id')
+        ->join('terminal_puvs', 'terminal_puvs.id', '=', 'terminal_dispense_tickets.puv_id')
+        ->whereRaw("
+            terminal_puvs.id = '".$puv_id."'
+            AND terminal_dispense_tickets.created_at >= '".$from."'
+            AND terminal_dispense_tickets.created_at < '".$to."'
+        ")
+        ->orderBy('terminal_dispense_tickets.created_at', 'ASC')
+        ->get();
+
+    $Querydata = json_decode($rawQuery, true);
+
+    return $this->sendResponse($Querydata, 'Reports retrieved successfully.');
+}
 }
