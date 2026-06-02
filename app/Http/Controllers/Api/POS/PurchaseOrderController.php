@@ -110,7 +110,13 @@ class PurchaseOrderController extends BaseController
 
 public function show($purchaseOrderId)
 {
-    $items = purchase_orders::where('purchase_order_id', $purchaseOrderId)
+    $items = purchase_orders::query()
+        ->join('products', 'products.id', '=', 'purchase_orders.product_id')
+        ->where('purchase_orders.purchase_order_id', $purchaseOrderId)
+        ->select(
+            'purchase_orders.*',
+            'products.name'
+        )
         ->get();
 
     if ($items->isEmpty()) {
@@ -130,12 +136,12 @@ public function show($purchaseOrderId)
         'total_amount' => $items->sum(
             fn ($x) => $x->quantity * $x->retail_price
         ),
+        'total_quantity' => $items->sum('quantity'),
     ]);
 }
 
 public function update(Request $request, $purchaseOrderId)
 {
-    Log::channel('stderr')->info('awwwwww');
 
     purchase_orders::where('purchase_order_id', $purchaseOrderId)
         ->update([
