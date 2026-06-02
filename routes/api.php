@@ -24,6 +24,7 @@ use App\Http\Controllers\Api\Collector\Dispense_Cash_Tickets_Controller;
 use App\Http\Controllers\Api\Collector\Get_Cash_Tickets_Controller;
 use App\Http\Controllers\Api\Collector\Occupant_Monthly_Payment_Controller;
 use App\Http\Controllers\Api\Collector\Reports;
+use App\Http\Controllers\Api\POS\POSReportsController;
 use App\Http\Controllers\Api\POS\ProductController;
 use App\Http\Controllers\Api\POS\PurchaseOrderController;
 use App\Http\Controllers\Api\POS\PurchaseOrderReportController;
@@ -208,4 +209,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource('admin/purchase_order_report', PurchaseOrderReportController::class);
 });
 
-
+Route::middleware('auth:sanctum')->controller(POSReportsController::class)->group(function () {
+    Route::get('cashier/CashPerCashier', 'CashPerCashier');
+});

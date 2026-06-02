@@ -107,4 +107,44 @@ class PurchaseOrderController extends BaseController
             ]);
         });
     }
+
+public function show($purchaseOrderId)
+{
+    $items = purchase_orders::where('purchase_order_id', $purchaseOrderId)
+        ->get();
+
+    if ($items->isEmpty()) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Purchase order not found',
+        ], 404);
+    }
+
+    $isVoided = (int) $items->first()->isvoided === 1;
+
+    return response()->json([
+        'success' => true,
+        'purchase_order_id' => $purchaseOrderId,
+        'isvoided' => $isVoided,
+        'items' => $items,
+        'total_amount' => $items->sum(
+            fn ($x) => $x->quantity * $x->retail_price
+        ),
+    ]);
+}
+
+public function update(Request $request, $purchaseOrderId)
+{
+    Log::channel('stderr')->info('awwwwww');
+
+    purchase_orders::where('purchase_order_id', $purchaseOrderId)
+        ->update([
+            'isvoided' => 1,
+        ]);
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Purchase Order Voided Successfully',
+    ]);
+}
 }
