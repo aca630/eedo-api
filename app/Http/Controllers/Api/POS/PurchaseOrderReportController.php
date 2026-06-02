@@ -19,6 +19,7 @@ class PurchaseOrderReportController extends BaseController
 
         $query = purchase_orders::query()
             ->join('products', 'products.id', '=', 'purchase_orders.product_id')
+            ->where('purchase_orders.isvoided', 0)
             ->select(
                 'purchase_orders.purchase_order_id',
                 'purchase_orders.cashier_id',
