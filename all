@@ -1,0 +1,8 @@
+18:    public function register(Request $request)
+20:        $validator = FacadesValidator::make($request->all(), [
+22:            'email'=>'required',
+23:            'password'=>'required',
+30:        $input = $request->all();
+32:        $user = User::create($input);
+39:    public function login(Request $request)
+44:        if(Auth::guard('web')->attempt(['email' => $request->email, 'password' => $request->password])){

@@ -163,6 +163,61 @@ Route::middleware('auth:sanctum')->get(
     [PrivateTransactionController::class, 'computeById']
 )->whereNumber('id');
 
+Route::post(
+    '/public-slaughter/cashier/create',
+    [\App\Http\Controllers\PublicSlaughterTransactionController::class, 'createByCashier']
+);
+
+Route::post(
+    '/public-slaughter/cashier/update/{id}',
+    [\App\Http\Controllers\PublicSlaughterTransactionController::class, 'updateByCashier']
+);
+
+Route::post(
+    '/public-slaughter/slaughter/create',
+    [\App\Http\Controllers\PublicSlaughterTransactionController::class, 'createBySlaughter']
+);
+
+Route::post(
+    '/public-slaughter/slaughter/update/{id}',
+    [\App\Http\Controllers\PublicSlaughterTransactionController::class, 'updateBySlaughter']
+);
+
+Route::get(
+    '/public-slaughter/unfinished',
+    [\App\Http\Controllers\PublicSlaughterTransactionController::class, 'getUnfinished']
+);
+
+Route::get(
+    '/public-slaughter/get/{id}',
+    [\App\Http\Controllers\PublicSlaughterTransactionController::class, 'getById']
+);
+
+Route::get(
+    '/public-slaughter/lookup/pending',
+    [\App\Http\Controllers\PublicSlaughterTransactionController::class, 'lookupPending']
+);
+
+/**
+ * ============================================================
+ * PUBLIC SLAUGHTER - FETCH TRANSACTION BY ID Used by Public Slaughter (App 2)
+ * ------------------------------------------------------------
+ */
+Route::get(
+    '/public-slaughter/{id}',
+    [\App\Http\Controllers\PublicSlaughterTransactionController::class, 'show']
+);
+
+/**
+ * ============================================================
+ * PUBLIC SLAUGHTER - UPDATE BY SLAUGHTER (APP 2) Updates an existing public transaction by ID
+ * ------------------------------------------------------------
+ */
+Route::patch(
+    '/public-slaughter/slaughter/{id}',
+    [\App\Http\Controllers\PublicSlaughterTransactionController::class, 'updateBySlaughter']
+);
+
 
 
 //Collector Routes

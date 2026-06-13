@@ -1,0 +1,1 @@
+23:    public function sendError($error, $errorMessages = [], $code = 404)
